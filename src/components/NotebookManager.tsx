@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../../src/redux/store";
+import type { AppDispatch, RootState } from "../../src/redux/store";
 import {
 	createNotebook,
 	setActiveNotebook,
@@ -9,7 +9,7 @@ import {
 } from "../../src/redux/notebooksSlice";
 
 const NotebookManager: React.FC = () => {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const notebooks = useSelector((state: RootState) => state.notebooks.notebooks);
 	const activeNotebookId = useSelector((state: RootState) => state.notebooks.activeNotebookId);
 	const activeNotebook = activeNotebookId ? notebooks[activeNotebookId] : null;
@@ -69,7 +69,7 @@ const NotebookManager: React.FC = () => {
 							activeNotebookId === notebook.id
 								? "bg-blue-500 text-white"
 								: "bg-gray-200 text-gray-800"
-						}`}
+							}`}
 						onClick={() => dispatch(setActiveNotebook(notebook.id))}
 					>
 						{notebook.filename}

@@ -1,12 +1,17 @@
 // import './App.css'
 
-import NotebookManager from "./components/NotebookManager";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import store from "./redux/store";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
 	return (
-		<>
-			<NotebookManager />
-		</>
+		<Provider store={store}>
+			<BrowserRouter>
+				<AppRoutes />
+			</BrowserRouter>
+		</Provider>
 	);
 }
 
