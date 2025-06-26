@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import notebooksReducer from './features/notebooks/notebooksSlice';
+import notebooksReducer from './notebooksSlice';
 
 const store = configureStore({
   reducer: {

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../store";
+import type { RootState } from "../../src/redux/store";
 import {
 	createNotebook,
 	setActiveNotebook,
 	updateFilename,
 	saveNotebook,
-} from "../features/notebooks/notebooksSlice";
+} from "../../src/redux/notebooksSlice";
 
 const NotebookManager: React.FC = () => {
 	const dispatch = useDispatch();
