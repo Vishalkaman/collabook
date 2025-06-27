@@ -1,70 +1,92 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type { Notebook, NotebookCell } from "../types/notebook";
 
-
-interface Notebook {
-  id: string;
-  filename: string;
-  lastCheckpoint: string | null; // ISO timestamp, e.g., "2025-06-25T13:06:00.000Z"
+interface NotebooksState {
+	notebook: Notebook;
+	selectedCellId: string | null;
 }
 
-interface NotebookState {
-  notebooks: Record<string, Notebook>;
-  activeNotebookId: string | null;
-}
-
-const initialState: NotebookState = {
-  notebooks: {
-    default: {
-      id: 'default',
-      filename: 'Untitled Notebook',
-      lastCheckpoint: null,
-    },
-  },
-  activeNotebookId: 'default', // Default notebook for single-notebook use
+const initialState: NotebooksState = {
+	notebook: {
+		cells: [],
+	},
+	selectedCellId: null,
 };
 
 const notebooksSlice = createSlice({
-  name: 'notebooks',
-  initialState,
-  reducers: {
-    createNotebook: (state, action: PayloadAction<{ id: string; filename: string }>) => {
-      state.notebooks[action.payload.id] = {
-        id: action.payload.id,
-        filename: action.payload.filename,
-        lastCheckpoint: null,
-      };
-      if (!state.activeNotebookId) {
-        state.activeNotebookId = action.payload.id;
-      }
-    },
-    setActiveNotebook: (state, action: PayloadAction<string>) => {
-      if (state.notebooks[action.payload]) {
-        state.activeNotebookId = action.payload;
-      }
-    },
-    updateFilename: (state, action: PayloadAction<{ notebookId: string; filename: string }>) => {
-      const notebook = state.notebooks[action.payload.notebookId];
-      if (notebook) {
-        notebook.filename = action.payload.filename;
-        notebook.lastCheckpoint = new Date().toISOString(); // Update checkpoint on filename change
-      }
-    },
-    saveNotebook: (state, action: PayloadAction<{ notebookId: string }>) => {
-      const notebook = state.notebooks[action.payload.notebookId];
-      if (notebook) {
-        notebook.lastCheckpoint = new Date().toISOString();
-      }
-    },
-    deleteNotebook: (state, action: PayloadAction<string>) => {
-      delete state.notebooks[action.payload];
-      if (state.activeNotebookId === action.payload) {
-        state.activeNotebookId = Object.keys(state.notebooks)[0] || null;
-      }
-    },
-  },
+	name: "notebooks",
+	initialState,
+	reducers: {
+		setNotebook(state, action: PayloadAction<Notebook>) {
+			state.notebook = action.payload;
+		},
+		selectCell(state, action: PayloadAction<string>) {
+			state.selectedCellId = action.payload;
+		},
+		addCellAbove(state, action: PayloadAction<string>) {
+			const index = state.notebook.cells.findIndex((c) => c.id === action.payload);
+			if (index !== -1) {
+				const newCell: NotebookCell = {
+					id: crypto.randomUUID(),
+					cell_type: "code",
+					execution_count: null,
+					source: [""],
+					outputs: [],
+				};
+				state.notebook.cells.splice(index, 0, newCell);
+			}
+		},
+		addCellBelow(state, action: PayloadAction<string>) {
+			const index = state.notebook.cells.findIndex((c) => c.id === action.payload);
+			if (index !== -1) {
+				const newCell: NotebookCell = {
+					id: crypto.randomUUID(),
+					cell_type: "code",
+					execution_count: null,
+					source: [""],
+					outputs: [],
+				};
+				state.notebook.cells.splice(index + 1, 0, newCell);
+			}
+		},
+		deleteCell(state, action: PayloadAction<string>) {
+			state.notebook.cells = state.notebook.cells.filter((c) => c.id !== action.payload);
+		},
+		moveCell(state, action: PayloadAction<{ id: string; direction: "up" | "down" }>) {
+			const index = state.notebook.cells.findIndex((c) => c.id === action.payload.id);
+			const targetIndex = action.payload.direction === "up" ? index - 1 : index + 1;
+			if (index !== -1 && targetIndex >= 0 && targetIndex < state.notebook.cells.length) {
+				const [movedCell] = state.notebook.cells.splice(index, 1);
+				state.notebook.cells.splice(targetIndex, 0, movedCell);
+			}
+		},
+		duplicateCell(state, action: PayloadAction<string>) {
+			const index = state.notebook.cells.findIndex((c) => c.id === action.payload);
+			if (index !== -1) {
+				const cellToCopy = state.notebook.cells[index];
+				const newCell = { ...cellToCopy, id: crypto.randomUUID() };
+				state.notebook.cells.splice(index + 1, 0, newCell);
+			}
+		},
+		updateCellSource(state, action: PayloadAction<{ id: string; source: string[] }>) {
+			const cell = state.notebook.cells.find((c) => c.id === action.payload.id);
+			if (cell) {
+				cell.source = action.payload.source;
+			}
+		},
+	},
 });
 
-export const { createNotebook, setActiveNotebook, updateFilename, saveNotebook, deleteNotebook } =
-  notebooksSlice.actions;
+export const {
+	setNotebook,
+	selectCell,
+	addCellAbove,
+	addCellBelow,
+	deleteCell,
+	moveCell,
+	duplicateCell,
+	updateCellSource,
+} = notebooksSlice.actions;
+
 export default notebooksSlice.reducer;

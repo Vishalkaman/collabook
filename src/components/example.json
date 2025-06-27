@@ -1,0 +1,55 @@
+{
+	"cells": [
+		{
+			"cell_type": "code",
+			"id": "7f825c78-7aff-49a5-8c15-754cbe77978e",
+			"execution_count": 4,
+			"source": ["import math", "math.pi"],
+			"outputs": [
+				{
+					"output_type": "execute_result",
+					"data": ["3.141592653589793"]
+				}
+			]
+		},
+		{
+			"cell_type": "code",
+			"id": "31b236cf-4975-45fd-8fce-b249e2253a7e",
+			"execution_count": 3,
+			"source": ["print('Hello, world!')", "def sum(a, b):", "    return a + b", "sum(2, 3)"],
+			"outputs": [
+				{
+					"output_type": "stream",
+					"data": ["Hello, world!"]
+				},
+				{
+					"output_type": "execute_result",
+					"data": ["5"]
+				}
+			]
+		},
+		{
+			"cell_type": "code",
+			"id": "d609b8be-b89d-49f7-b857-e13918084757",
+			"execution_count": 5,
+			"source": ["def sub(a, b):", "    return a - b", "sub(2, 3)", "undefined_variable"],
+			"outputs": [
+				{
+					"output_type": "execute_result",
+					"data": ["-1"]
+				},
+				{
+					"output_type": "error",
+					"data": ["NameError: name 'undefined_variable' is not defined"]
+				}
+			]
+		},
+		{
+			"cell_type": "markdown",
+			"id": "8d6bfe59-f096-4579-a02b-e134dbac27ab",
+			"execution_count": null,
+			"source": ["# This is a heading", "## Header 2", "$$ a^2 = c^2 $$"],
+			"outputs": []
+		}
+	]
+}
