@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Notebook, NotebookCell } from "../types/notebook";
+import type { INotebook, INotebookCell } from "../types/notebook";
 
 interface NotebooksState {
-	notebook: Notebook;
+	notebook: INotebook;
 	selectedCellId: string | null;
 }
 
@@ -18,7 +18,7 @@ const notebooksSlice = createSlice({
 	name: "notebooks",
 	initialState,
 	reducers: {
-		setNotebook(state, action: PayloadAction<Notebook>) {
+		setNotebook(state, action: PayloadAction<INotebook>) {
 			state.notebook = action.payload;
 		},
 		selectCell(state, action: PayloadAction<string>) {
@@ -27,7 +27,7 @@ const notebooksSlice = createSlice({
 		addCellAbove(state, action: PayloadAction<string>) {
 			const index = state.notebook.cells.findIndex((c) => c.id === action.payload);
 			if (index !== -1) {
-				const newCell: NotebookCell = {
+				const newCell: INotebookCell = {
 					id: crypto.randomUUID(),
 					cell_type: "code",
 					execution_count: null,
@@ -40,7 +40,7 @@ const notebooksSlice = createSlice({
 		addCellBelow(state, action: PayloadAction<string>) {
 			const index = state.notebook.cells.findIndex((c) => c.id === action.payload);
 			if (index !== -1) {
-				const newCell: NotebookCell = {
+				const newCell: INotebookCell = {
 					id: crypto.randomUUID(),
 					cell_type: "code",
 					execution_count: null,

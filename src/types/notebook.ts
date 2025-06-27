@@ -1,17 +1,16 @@
-export interface NotebookOutput {
+export interface INotebookOutput {
 	output_type: "stream" | "execute_result" | "error";
 	data: string[];
 }
 
-export interface NotebookCell {
+export interface INotebookCell {
 	cell_type: "code" | "markdown";
 	id: string;
 	execution_count: number | null;
 	source: string[];
-	outputs: NotebookOutput[];
+	outputs: INotebookOutput[];
 }
 
-export interface Notebook {
-	cells: NotebookCell[];
+export interface INotebook {
+	cells: INotebookCell[];
 }
-
